@@ -1,4 +1,4 @@
-namespace BiancasBikes.Models;
+namespace HouseRules.Models;
 
 public class Registration
 {

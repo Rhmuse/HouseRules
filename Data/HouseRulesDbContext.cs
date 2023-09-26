@@ -8,6 +8,10 @@ public class HouseRulesDbContext : IdentityDbContext<IdentityUser>
 {
     private readonly IConfiguration _configuration;
     public DbSet<UserProfile> UserProfiles { get; set; }
+    public DbSet<Chore> Chores { get; set; }
+    public DbSet<ChoreAssignment> ChoreAssignments { get; set; }
+    public DbSet<ChoreCompletion> ChoreCompletions { get; set; }
+
 
     public HouseRulesDbContext(DbContextOptions<HouseRulesDbContext> context, IConfiguration config) : base(context)
     {
@@ -46,5 +50,90 @@ public class HouseRulesDbContext : IdentityDbContext<IdentityUser>
             LastName = "Strator",
             Address = "101 Main Street",
         });
+
+        modelBuilder.Entity<Chore>().HasData(
+            new Chore[]
+            {
+                new Chore
+                {
+                Id = 1,
+                Name = "Fold Laundry",
+                Difficulty = 5,
+                ChoreFrequencyDays = 2
+                },
+                new Chore
+                {
+                Id = 2,
+                Name = "Do Dishes",
+                Difficulty = 2,
+                ChoreFrequencyDays = 1
+                },
+                new Chore
+                {
+                Id = 3,
+                Name = "Sweep Floors",
+                Difficulty = 2,
+                ChoreFrequencyDays = 2
+                },
+                new Chore
+                {
+                Id = 4,
+                Name = "Mop Floors",
+                Difficulty = 3,
+                ChoreFrequencyDays = 7
+                },
+                new Chore
+                {
+                Id = 5,
+                Name = "Scoop Litter",
+                Difficulty = 3,
+                ChoreFrequencyDays = 2
+                }
+            }
+        );
+
+        modelBuilder.Entity<ChoreAssignment>().HasData(
+            new ChoreAssignment[]
+            {
+                new ChoreAssignment
+                {
+                    Id = 1,
+                    UserProfileId = 1,
+                    ChoreId = 1
+                },
+                new ChoreAssignment
+                {
+                    Id = 2,
+                    UserProfileId = 1,
+                    ChoreId = 2
+                },
+                new ChoreAssignment
+                {
+                    Id = 3,
+                    UserProfileId = 1,
+                    ChoreId = 3
+                },
+                new ChoreAssignment
+                {
+                    Id = 4,
+                    UserProfileId = 1,
+                    ChoreId = 4
+                },
+            }
+        );
+
+        modelBuilder.Entity<ChoreCompletion>().HasData(
+            new ChoreCompletion[]
+            {
+                new ChoreCompletion
+                {
+                    Id = 1,
+                    UserProfileId = 1,
+                    ChoreId = 1,
+                    CompletedOn = DateTime.Now,
+                }
+
+            }
+        );
     }
 }
