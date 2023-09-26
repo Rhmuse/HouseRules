@@ -1,11 +1,10 @@
 import { Route, Routes } from "react-router-dom";
-import Bikes from "./bikes/Bikes";
 import { AuthorizedRoute } from "./auth/AuthorizedRoute";
 import Login from "./auth/Login";
 import Register from "./auth/Register";
-import WorkOrderList from './workorders/WorkOrderList';
-import CreateWorkOrder from './workorders/CreateWorkOrder';
-import UserProfileList from './userprofiles/UserProfileList';
+import { Home } from './Home';
+import { UserProfileList } from './userprofile/UserProfileList';
+import { UserProfileDetails } from './userprofile/UserProfileDetails';
 
 export default function ApplicationViews({ loggedInUser, setLoggedInUser }) {
   return (
@@ -15,10 +14,21 @@ export default function ApplicationViews({ loggedInUser, setLoggedInUser }) {
           index
           element={
             <AuthorizedRoute loggedInUser={loggedInUser}>
-              Home
+              <Home />
             </AuthorizedRoute>
           }
         />
+        <Route path='userprofiles'>
+          <Route
+            index
+            element={<AuthorizedRoute loggedInUser={loggedInUser} roles={["Admin"]}>
+              <UserProfileList />
+            </AuthorizedRoute>} />
+          <Route
+            path=':userId'
+            element={<AuthorizedRoute loggedInUser={loggedInUser} roles={["Admin"]}><UserProfileDetails /></AuthorizedRoute>} />
+        </Route>
+
         <Route
           path="login"
           element={<Login setLoggedInUser={setLoggedInUser} />}

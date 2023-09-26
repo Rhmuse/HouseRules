@@ -23,7 +23,9 @@ public class UserProfileController : ControllerBase
     [Authorize(Roles = "Admin")]
     public IActionResult Get()
     {
-        return Ok(_dbContext.UserProfiles.ToList());
+        return Ok(_dbContext.UserProfiles
+            .Include(up => up.IdentityUser)
+            .ToList());
     }
 
     [HttpGet("withroles")]
