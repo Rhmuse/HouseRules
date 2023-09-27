@@ -30,7 +30,7 @@ export default function NavBar({ loggedInUser, setLoggedInUser }) {
                         <Collapse isOpen={open} navbar>
                             <Nav navbar>
                                 <NavItem onClick={() => setOpen(false)}>
-                                    <NavLink tag={RRNavLink} to="/">
+                                    <NavLink tag={RRNavLink} to="/chores">
                                         Chores
                                     </NavLink>
                                 </NavItem>

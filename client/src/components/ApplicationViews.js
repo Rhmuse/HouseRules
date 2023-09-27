@@ -5,11 +5,15 @@ import Register from "./auth/Register";
 import { Home } from './Home';
 import { UserProfileList } from './userprofile/UserProfileList';
 import { UserProfileDetails } from './userprofile/UserProfileDetails';
+import { ChoresList } from './chores/ChoresList';
+import { ChoreDetails } from './chores/ChoreDetails';
+import { CreateChore } from './chores/CreateChore';
 
 export default function ApplicationViews({ loggedInUser, setLoggedInUser }) {
   return (
     <Routes>
       <Route path="/">
+
         <Route
           index
           element={
@@ -18,26 +22,58 @@ export default function ApplicationViews({ loggedInUser, setLoggedInUser }) {
             </AuthorizedRoute>
           }
         />
+
         <Route path='userprofiles'>
+
           <Route
             index
             element={<AuthorizedRoute loggedInUser={loggedInUser} roles={["Admin"]}>
               <UserProfileList />
             </AuthorizedRoute>} />
+
           <Route
             path=':userId'
-            element={<AuthorizedRoute loggedInUser={loggedInUser} roles={["Admin"]}><UserProfileDetails /></AuthorizedRoute>} />
+            element={<AuthorizedRoute loggedInUser={loggedInUser} roles={["Admin"]}>
+              <UserProfileDetails />
+            </AuthorizedRoute>} />
+
+        </Route>
+
+        <Route path='chores'>
+
+          <Route
+            index
+            element={<AuthorizedRoute loggedInUser={loggedInUser}>
+              <ChoresList loggedInUser={loggedInUser} />
+            </AuthorizedRoute>} />
+
+          <Route
+            path=':choreId'
+            element={<AuthorizedRoute loggedInUser={loggedInUser}>
+              <ChoreDetails />
+            </AuthorizedRoute>}
+          />
+
+          <Route
+            path='create'
+            element={<AuthorizedRoute loggedInUser={loggedInUser} roles={["Admin"]}>
+              <CreateChore />
+            </AuthorizedRoute>}
+          />
+
         </Route>
 
         <Route
           path="login"
           element={<Login setLoggedInUser={setLoggedInUser} />}
         />
+
         <Route
           path="register"
           element={<Register setLoggedInUser={setLoggedInUser} />}
         />
       </Route>
+
       <Route path="*" element={<p>Whoops, nothing here...</p>} />
     </Routes>
   );

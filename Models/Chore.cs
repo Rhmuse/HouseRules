@@ -12,5 +12,5 @@ public class Chore
     [Required]
     public int ChoreFrequencyDays { get; set; }
     public List<ChoreCompletion>? ChoreCompletions { get; set; }
-    public ChoreAssignment? ChoreAssignment { get; set; }
+    public List<ChoreAssignment>? ChoreAssignments { get; set; }
 }

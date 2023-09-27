@@ -51,7 +51,7 @@ public class ChoreController : ControllerBase
     {
         Chore foundChore = _dbContext.Chores
             .Include(c => c.ChoreCompletions)
-            .Include(c => c.ChoreAssignment)
+            .Include(c => c.ChoreAssignments)
             .ThenInclude(ca => ca.UserProfile)
             .SingleOrDefault(c => c.Id == id);
 
