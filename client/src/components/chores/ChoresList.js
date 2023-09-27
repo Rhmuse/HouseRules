@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { deleteChore, getChores } from '../../managers/choreManager';
+import { completeChore, deleteChore, getChores } from '../../managers/choreManager';
 import { Button, Container, List, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
@@ -18,6 +18,15 @@ export const ChoresList = ({ loggedInUser }) => {
         deleteChore(choreId).then(() => retrieveChores())
     };
 
+    const handleComplete = (choreId) => {
+        completeChore(choreId, loggedInUser.id).then((res) => {
+            if (res.ok) {
+                window.alert("Chore Completed!")
+            } else {
+                window.alert(res.statusText);
+            }
+        })
+    }
 
 
     return (
@@ -44,6 +53,7 @@ export const ChoresList = ({ loggedInUser }) => {
                                         <ListGroupItemHeading style={{ display: "flex", justifyContent: "space-between" }}>
                                             {c.name}
                                             <div>
+                                                <Button onClick={() => handleComplete(c.id)}>Complete</Button>{" "}
                                                 {
                                                     loggedInUser.roles.includes("Admin")
                                                     &&

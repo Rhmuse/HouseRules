@@ -23,3 +23,21 @@ export const addChore = (chore) => {
         body: JSON.stringify(chore)
     }).then(res => res.json());
 }
+
+export const completeChore = (choreId, userId) => {
+    return fetch(`${_apiUrl}/${choreId}/complete?userId=${userId}`, {
+        method: "POST"
+    })
+}
+
+export const assignChore = (choreId, userId) => {
+    return fetch(`${_apiUrl}/${choreId}/assign?userId=${userId}`, {
+        method: "POST"
+    })
+}
+
+export const unassignChore = (choreId, userId) => {
+    return fetch(`${_apiUrl}/${choreId}/unassign?userId=${userId}`, {
+        method: "POST"
+    })
+}

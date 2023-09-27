@@ -51,6 +51,7 @@ public class ChoreController : ControllerBase
     {
         Chore foundChore = _dbContext.Chores
             .Include(c => c.ChoreCompletions)
+            .ThenInclude(cc => cc.UserProfile)
             .Include(c => c.ChoreAssignments)
             .ThenInclude(ca => ca.UserProfile)
             .SingleOrDefault(c => c.Id == id);
@@ -133,9 +134,9 @@ public class ChoreController : ControllerBase
 
     [HttpPost("{id}/unassign")]
     [Authorize(Roles = "Admin")]
-    public IActionResult ChoreUnassign(int id)
+    public IActionResult ChoreUnassign(int id, int userId)
     {
-        var foundChoreAssignment = _dbContext.ChoreAssignments.SingleOrDefault(ca => ca.Id == id);
+        var foundChoreAssignment = _dbContext.ChoreAssignments.SingleOrDefault(ca => ca.ChoreId == id && ca.UserProfileId == userId);
         if (foundChoreAssignment == null) return BadRequest();
         _dbContext.ChoreAssignments.Remove(foundChoreAssignment);
         _dbContext.SaveChanges();
