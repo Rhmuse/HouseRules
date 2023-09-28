@@ -21,11 +21,16 @@ export const ChoresList = ({ loggedInUser }) => {
     const handleComplete = (choreId) => {
         completeChore(choreId, loggedInUser.id).then((res) => {
             if (res.ok) {
-                window.alert("Chore Completed!")
+                retrieveChores();
             } else {
                 window.alert(res.statusText);
             }
         })
+    }
+
+    const handleBackgroundColor = (bool) => {
+        if (bool) return { backgroundColor: 'red' }
+        return {}
     }
 
 
@@ -49,7 +54,7 @@ export const ChoresList = ({ loggedInUser }) => {
                         {
                             chores.map(c => {
                                 return (
-                                    <ListGroupItem key={`chore-${c.id}`}>
+                                    <ListGroupItem key={`chore-${c.id}`} style={handleBackgroundColor(c.overdue)}>
                                         <ListGroupItemHeading style={{ display: "flex", justifyContent: "space-between" }}>
                                             {c.name}
                                             <div>

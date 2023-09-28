@@ -41,3 +41,7 @@ export const unassignChore = (choreId, userId) => {
         method: "POST"
     })
 }
+
+export const getMyChoreAssignments = (userId) => {
+    return fetch(`${_apiUrl}?userId=${userId}`).then(res => res.json())
+}

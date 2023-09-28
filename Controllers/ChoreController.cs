@@ -23,9 +23,16 @@ public class ChoreController : ControllerBase
 
     [HttpGet]
     [Authorize]
-    public IActionResult Get()
+    public IActionResult Get(int userId)
     {
-        return Ok(_dbContext.Chores.OrderBy(c => c.Id).ToList());
+        if (userId == 0) return Ok(_dbContext.Chores.Include(c => c.ChoreCompletions).OrderBy(c => c.Id).ToList());
+        return Ok(_dbContext.ChoreAssignments
+            .Include(ca => ca.Chore)
+            .ThenInclude(c => c.ChoreCompletions)
+            .Where(ca => ca.UserProfileId == userId)
+            .ToList());
+
+
     }
 
     [HttpPost]

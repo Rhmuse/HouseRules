@@ -22,17 +22,27 @@ const difficultyOptions = [{
     value: "5",
     difficulty: 5
 }];
+
 export const CreateChore = () => {
     const navigate = useNavigate();
+
     const [choreBuilder, setChoreBuilder] = useState({
         name: "",
         difficulty: 0,
         choreFrequencyDays: 1,
     });
+    const [errors, setError] = useState("");
 
     const handleSubmit = () => {
-        addChore(choreBuilder).then(res => navigate(`/chores/${res.id}`))
+        addChore(choreBuilder).then(res => {
+            if (res.errors) {
+                setError(res.errors)
+            } else {
+                navigate(`/chores/${res.id}`)
+            }
+        })
     }
+
 
     return (
         <Container>
@@ -63,11 +73,19 @@ export const CreateChore = () => {
                     copy.choreFrequencyDays = e.target.value;
                     setChoreBuilder(copy);
                 }} />
+                <div style={{ color: "red" }}>
+                    {Object.keys(errors).map((key) => (
+                        <p key={key}>
+                            {key}: {errors[key].join(",")}
+                        </p>
+                    ))}
+                </div>
                 <Container style={{ display: "Flex", justifyContent: "flex-end", padding: "1rem" }}>
                     <Button onClick={() => handleSubmit()} >Submit</Button>
                 </Container>
 
             </Form>
+
         </Container>
     )
 }

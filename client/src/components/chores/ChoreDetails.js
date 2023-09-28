@@ -1,14 +1,36 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom'
-import { assignChore, getChoreById, unassignChore } from '../../managers/choreManager';
-import { Container, Input, Label, List, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText } from 'reactstrap';
+import { useNavigate, useParams } from 'react-router-dom'
+import { addChore, assignChore, getChoreById, unassignChore } from '../../managers/choreManager';
+import { Button, Container, Input, Label, List, ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText } from 'reactstrap';
 import { getUserProfiles } from '../../managers/userProfileManager';
+
+const difficultyOptions = [{
+    value: "Select a difficulty...",
+    difficulty: 0
+}, {
+    value: "1",
+    difficulty: 1
+}, {
+    value: "2",
+    difficulty: 2
+}, {
+    value: "3",
+    difficulty: 3
+}, {
+    value: "4",
+    difficulty: 4
+}, {
+    value: "5",
+    difficulty: 5
+}];
 
 export const ChoreDetails = () => {
     const { choreId } = useParams();
+    const navigate = useNavigate();
 
     const [chore, setChore] = useState({});
     const [users, setUsers] = useState([]);
+    const [errors, setError] = useState("");
 
     useEffect(() => {
         retrieveChore(choreId);
@@ -35,15 +57,43 @@ export const ChoreDetails = () => {
         }
     }
 
+    const handleSubmit = () => {
+        addChore(chore).then(res => {
+            if (res.errors) {
+                setError(res.errors)
+            } else {
+                navigate(`/chores`)
+            }
+        })
+    }
+
     if (users.length === 0) return null;
     return (
         <Container>
-            <h3>{chore.name}</h3>
+            <Container style={{ display: "flex", flexDirection: "row", padding: "1rem" }}>
+                <Label htmlFor='choreNameInput' style={{ paddingRight: "1rem" }}><h3>Name:</h3></Label>
+                <Input type='text' id='choreNameInput' value={chore.name} onChange={(e) => {
+                    const copy = { ...chore };
+                    copy.name = e.target.value;
+                    setChore(copy);
+                }} /></Container>
             <List>
                 <ListGroup>
                     <ListGroupItem>
-                        <ListGroupItemHeading>Difficulty:</ListGroupItemHeading>
-                        <ListGroupItemText>{chore.difficulty}/5</ListGroupItemText>
+                        <Label htmlFor='choreDifficultyInput'>Difficulty:</Label>
+                        <Input type='select' id='choreDifficultyInput' value={chore.difficulty} onChange={(e) => {
+                            const copy = { ...chore };
+                            copy.difficulty = e.target.value;
+                            setChore(copy);
+                        }}>
+                            {
+                                difficultyOptions.map(opt => {
+                                    return (
+                                        <option key={`option-${opt.difficulty}`} value={opt.difficulty}> {opt.value}</option>
+                                    )
+                                })
+                            }
+                        </Input>
                     </ListGroupItem>
                     <ListGroupItem>
                         <ListGroupItemHeading>Assignees:</ListGroupItemHeading>
@@ -73,6 +123,16 @@ export const ChoreDetails = () => {
                     </ListGroupItem>
                 </ListGroup>
             </List>
+            <div style={{ color: "red" }}>
+                {Object.keys(errors).map((key) => (
+                    <p key={key}>
+                        {key}: {errors[key].join(",")}
+                    </p>
+                ))}
+            </div>
+            <Container style={{ display: "flex", justifyContent: "flex-end" }}>
+                <Button onClick={() => handleSubmit()} >Save</Button>
+            </Container>
         </Container>
     )
 }
